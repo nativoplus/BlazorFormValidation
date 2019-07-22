@@ -1,0 +1,68 @@
+@using BlazorValidation.Shared.Interfaces
+<div class="top-row pl-4 navbar navbar-dark">
+    <a class="navbar-brand" href="">BlazorValidation</a>
+    <button class="navbar-toggler" @onclick="@ToggleNavMenu">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+</div>
+
+<div class="@NavMenuCssClass" @onclick="@ToggleNavMenu">
+    <ul class="nav flex-column">
+        <li class="nav-item px-3">
+            <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
+                <span class="oi oi-home" aria-hidden="true"></span> Home
+            </NavLink>
+        </li>
+
+        @if (_userManager.IsLogIn())
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="/dashboard" Match="NavLinkMatch.All">
+                    <span class="oi oi-home" aria-hidden="true"></span> Premium Content
+                </NavLink>
+            </li>
+
+            <li class="nav-item px-3">
+                <a class="nav-link" style="color:white;" @onclick="@LogOutUser">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span>Log Out
+                </a>
+            </li>
+        }
+        else
+        {
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="login">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span>Log In
+                </NavLink>
+            </li>
+
+            <li class="nav-item px-3">
+                <NavLink class="nav-link" href="register">
+                    <span class="oi oi-list-rich" aria-hidden="true"></span>Register
+                </NavLink>
+            </li>
+        }
+
+
+
+    </ul>
+</div>
+
+@code {
+bool collapseNavMenu = true;
+[Inject]
+private IUserManager _userManager { get; set; }
+
+string NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+
+void ToggleNavMenu()
+{
+    collapseNavMenu = !collapseNavMenu;
+}
+
+public void LogOutUser()
+{
+    _userManager.LogOut();
+    StateHasChanged();
+}
+}

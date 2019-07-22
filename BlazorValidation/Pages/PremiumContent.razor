@@ -1,0 +1,27 @@
+@page "/dashboard"
+@using BlazorValidation.Shared.Interfaces
+@using BlazorValidation.Shared.Models
+<h3>Premium Content</h3>
+@if (_user !=null){<p>Hi, @_user.FirstName this page is only for register users.</p>}
+
+@code {
+        [Inject]
+        private IUserManager _userManager { get; set; }
+        [Inject]
+            IUriHelper _router { get; set; }
+
+        private User _user { get; set; }
+
+        protected override void OnInit()
+        {
+             if (!_userManager.IsLogIn())
+            {
+               _router.NavigateTo("/login");
+            }
+
+            _user = _userManager.GetUserInfo();
+        }
+   
+}
+
+

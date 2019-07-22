@@ -1,0 +1,53 @@
+@page "/login"
+@using BlazorValidation.Shared.Validations
+@using BlazorValidation.Shared.Interfaces
+
+<h3>LogIn</h3>
+
+<EditForm class="needs-validation" Model="@_validation" onValidSubmit="@OnSumbit" novalidate>
+    <DataAnnotationsValidator />
+    @*<ValidationSummary />*@
+
+
+
+    <div class="mb-3">
+        <label for="email">Email</label>
+        <InputText type="email" class="form-control" @bind-value="_validation.Email" id="email" placeholder="you@example.com" />
+        <ValidationMessage For="@(() => @_validation.Email)" />
+    </div>
+    <div class="mb-3">
+        <label for="password">Password</label>
+        <InputText type="password" class="form-control" @bind-value="_validation.Password" id="password" placeholder="********" />
+        <ValidationMessage For="@(() => @_validation.Password)" />
+    </div>
+
+
+    <hr class="mb-4">
+    <button class="btn btn-primary btn-lg btn-block" type="submit">Log In</button>
+</EditForm>
+
+@code {
+private LogInValidation _validation = new LogInValidation();
+[Inject]
+private IUserManager _userManager { get; set; }
+[Inject]
+IUriHelper _router { get; set; }
+
+protected override void OnInit()
+{
+    if (_userManager.IsLogIn())
+    {
+        
+    }
+}
+public void OnSumbit()
+{
+    if ( _userManager.LogIn(_validation.Email, _validation.Password))
+    {
+       
+        _router.NavigateTo("/dashboard");
+    }
+
+}
+
+}

@@ -1,0 +1,106 @@
+@page "/register"
+@using BlazorValidation.Shared.Validations
+@using BlazorValidation.Shared.Interfaces
+<div class="container">
+    <div class="py-5 text-center">
+        <h2>Registration</h2>
+        <p class="lead">Please register to continue. </p>
+    </div>
+
+    <div class="row justify-content-center">
+
+        <div class="col-xs-12 col-md-8 order-md-1">
+            @if (userRegistered)
+            {
+                <h4 class="mb-3">You are register now. Go to log in, and try to log in.</h4>
+                <a class="btn-primary"S href="login"> Go to Log In</a>
+            }
+            else
+            {
+                <h4 class="mb-3">Sign Up</h4>
+                <EditForm class="needs-validation" Model="@_validation" onValidSubmit="@OnValidSubmit" onInvalidSubmit="@OnInvalidSubmit" novalidate>
+                    <DataAnnotationsValidator />
+                    @*<ValidationSummary />*@
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="firstName">First Name</label>
+                            <InputText type="text" class="form-control" id="firstName" @bind-value="_validation.FirstName" placeholder="" />
+                            <ValidationMessage For="@(() => @_validation.FirstName)" />
+
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="lastName">Last Name</label>
+                            <InputText type="text" class="form-control" id="lastName" @bind-value="_validation.LastName" placeholder="" />
+                            <ValidationMessage For="@(() => @_validation.LastName)" />
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="username">Username</label>
+                       
+                            <InputText type="text" @bind-value="_validation.Username" class="form-control" id="username" placeholder="Username" />
+                            <ValidationMessage For="@(() => @_validation.Username)" />
+                     
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="username">Age</label>
+                            <InputNumber type="text" @bind-value="_validation.Age" class="form-control" id="age" placeholder="18" />
+                            <ValidationMessage For="@(() => @_validation.Age)" />
+                        
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="email">Email</label>
+                        <InputText type="email" class="form-control" @bind-value="_validation.Email" id="email" placeholder="you@example.com" />
+                        <ValidationMessage For="@(() => @_validation.Email)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="password">Password</label>
+                        <InputText type="password" class="form-control" @bind-value="_validation.Password" id="password" placeholder="********" />
+                        <ValidationMessage For="@(() => @_validation.Password)" />
+                    </div>
+                    <div class="mb-3">
+                        <label for="confirm-password">Confirm Password</label>
+                        <InputText type="password" class="form-control" id="confirm-password" @bind-value="_validation.ConfirmPassword" placeholder="********" />
+                        <ValidationMessage For="@(() => @_validation.ConfirmPassword)" />
+                    </div>
+
+                    <hr class="mb-4">
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">Sign Up</button>
+                </EditForm>
+            }
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+
+
+@code {
+private SignUpFormValidation _validation = new SignUpFormValidation();
+private bool userRegistered { get; set; } = false;
+[Inject]
+private IUserManager _userManager { get; set; }
+//This will trigger when the form was valid
+private void OnValidSubmit()
+{
+    Console.WriteLine("Submit Valid");
+   userRegistered = _userManager.RegisterUser(_validation.GetRegisteredUser());
+}
+
+//This will trigger when the form was invalid
+public void OnInvalidSubmit()
+{
+    Console.WriteLine("Submit Invalid");
+}
+
+//This will trigger when the form is sumitted no matter if it is valid or invalid
+public void OnSubmit()
+{
+}
+}
